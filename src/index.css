@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary: #0071e3;
+    /* Apple Blue */
+    --secondary: #1d1d1f;
+    /* Apple Dark */
+    --bg: #F5F5F7;
+    /* Apple Off-White */
+    --text: #1d1d1f;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    @apply bg-[#F5F5F7] text-[#1d1d1f] antialiased overflow-x-hidden;
+}
+
+/* Apple Bento Card Utility */
+.bento-card {
+    @apply bg-white rounded-[2rem] shadow-sm hover:shadow-xl transition-shadow duration-500 border border-white/50;
+}
+
+/* Typography Utilities - Apple Style */
+.heading-xl {
+    @apply text-6xl md:text-8xl font-semibold tracking-tight leading-tight text-[#1d1d1f];
+    letter-spacing: -0.02em;
+    /* Tighter tracking for large text */
+}
+
+.heading-lg {
+    @apply text-4xl md:text-6xl font-semibold tracking-tight text-[#1d1d1f];
+    letter-spacing: -0.015em;
+}
+
+/* Minimal Apple-style Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F5F5F7;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d1d1d6;
+    border-radius: 10px;
+    border: 2px solid #F5F5F7;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8e8e93;
+}
+
+/* Animated gradient text */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Logo shine gleam effect */
+@keyframes shine-sweep {
+    0% {
+        transform: translateX(-150%);
+    }
+
+    30% {
+        transform: translateX(150%);
+    }
+
+    100% {
+        transform: translateX(150%);
+    }
+}
