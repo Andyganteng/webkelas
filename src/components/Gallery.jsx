@@ -109,7 +109,8 @@ const Gallery = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide"
+                        className="flex gap-3 overflow-x-auto pb-4 w-full px-4 md:px-0 scrollbar-hide snap-x"
+                        style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
                     >
                         {categories.map(cat => (
                             <button

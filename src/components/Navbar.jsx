@@ -123,8 +123,8 @@ const Navbar = () => {
                 <div className={`
                     relative flex items-center justify-between transition-all duration-500 ease-in-out
                     ${isScrolled || isOpen
-                        ? 'w-full max-w-5xl bg-white/70 backdrop-blur-xl shadow-sm border border-white/20'
-                        : 'w-full max-w-4xl bg-white/50 backdrop-blur-md shadow-sm border border-white/10'
+                        ? 'w-full max-w-5xl bg-white/90 backdrop-blur-xl shadow-md border-b border-white/20'
+                        : 'w-full max-w-4xl bg-white/80 backdrop-blur-md shadow-sm border-b border-white/10'
                     }
                     rounded-none border-b md:rounded-full md:border
                     px-4 py-3 md:px-6 md:py-3
