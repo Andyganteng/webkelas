@@ -92,9 +92,9 @@ const Structure = () => {
                 </div>
 
                 <div className="relative flex flex-col items-center">
-                    {/* SVG Connector Lines */}
+                    {/* SVG Connector Lines - Only visible on desktop where layout is fixed */}
                     <svg
-                        className="absolute top-0 left-0 w-full h-full pointer-events-none stroke-[#e5e5ea] fill-none"
+                        className="hidden lg:block absolute top-0 left-0 w-full h-full pointer-events-none stroke-[#e5e5ea] fill-none"
                         viewBox="0 0 100 1200"
                         preserveAspectRatio="none"
                         style={{ minHeight: '1200px' }}
