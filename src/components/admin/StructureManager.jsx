@@ -2,11 +2,9 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Pencil, Trash2, Save, X, Instagram, Upload, Loader } from 'lucide-react'
 import { useData } from '../../context/DataContext'
-import { storage } from '../../firebase'
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 
-// Compress image before upload for speed
-const compressImage = (file, maxWidth = 400) => {
+// Compress image to small base64 for storing in Realtime Database
+const compressImage = (file, maxWidth = 300) => {
     return new Promise((resolve) => {
         const reader = new FileReader()
         reader.onload = (e) => {
@@ -18,19 +16,12 @@ const compressImage = (file, maxWidth = 400) => {
                 canvas.height = img.height * ratio
                 const ctx = canvas.getContext('2d')
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-                canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.7)
+                resolve(canvas.toDataURL('image/jpeg', 0.5))
             }
             img.src = e.target.result
         }
         reader.readAsDataURL(file)
     })
-}
-
-const uploadImage = async (file, path) => {
-    const compressed = await compressImage(file)
-    const imgRef = storageRef(storage, path)
-    await uploadBytes(imgRef, compressed)
-    return await getDownloadURL(imgRef)
 }
 
 const StructureManager = () => {
@@ -71,9 +62,8 @@ const StructureManager = () => {
         if (!file) return
         setUploading(true)
         try {
-            const path = `structure/${Date.now()}_${file.name}`
-            const url = await uploadImage(file, path)
-            setForm({ ...form, image: url })
+            const dataUrl = await compressImage(file)
+            setForm({ ...form, image: dataUrl })
         } catch (e) {
             alert('Gagal upload gambar: ' + e.message)
         }

@@ -2,11 +2,9 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Pencil, Trash2, Save, X, Image, PlusCircle, MinusCircle, Upload, Loader } from 'lucide-react'
 import { useData } from '../../context/DataContext'
-import { storage } from '../../firebase'
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 
-// Compress image before upload for speed
-const compressImage = (file, maxWidth = 800) => {
+// Compress image to small base64 for storing in Realtime Database
+const compressImage = (file, maxWidth = 600) => {
     return new Promise((resolve) => {
         const reader = new FileReader()
         reader.onload = (e) => {
@@ -18,7 +16,7 @@ const compressImage = (file, maxWidth = 800) => {
                 canvas.height = img.height * ratio
                 const ctx = canvas.getContext('2d')
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-                canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.7)
+                resolve(canvas.toDataURL('image/jpeg', 0.5))
             }
             img.src = e.target.result
         }
@@ -86,12 +84,8 @@ const GalleryManager = () => {
         try {
             const newImages = []
             for (const file of files) {
-                const compressed = await compressImage(file)
-                const path = `gallery/${Date.now()}_${file.name}`
-                const imgRef = storageRef(storage, path)
-                await uploadBytes(imgRef, compressed)
-                const url = await getDownloadURL(imgRef)
-                newImages.push(url)
+                const dataUrl = await compressImage(file)
+                newImages.push(dataUrl)
             }
             const existingImages = form.images.filter(img => img.trim() !== '')
             setForm({ ...form, images: [...existingImages, ...newImages] })
@@ -123,6 +117,7 @@ const GalleryManager = () => {
                     accept="image/*"
                     multiple
                     className="hidden"
+                    disabled={uploading}
                     onChange={(e) => handleFileUpload(form, setForm, e.target.files)}
                 />
             </label>
