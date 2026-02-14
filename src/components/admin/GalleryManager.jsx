@@ -1,9 +1,30 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Pencil, Trash2, Save, X, Image, PlusCircle, MinusCircle, Upload } from 'lucide-react'
+import { Plus, Pencil, Trash2, Save, X, Image, PlusCircle, MinusCircle, Upload, Loader } from 'lucide-react'
 import { useData } from '../../context/DataContext'
 import { storage } from '../../firebase'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+
+// Compress image before upload for speed
+const compressImage = (file, maxWidth = 800) => {
+    return new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const img = new window.Image()
+            img.onload = () => {
+                const canvas = document.createElement('canvas')
+                const ratio = Math.min(maxWidth / img.width, 1)
+                canvas.width = img.width * ratio
+                canvas.height = img.height * ratio
+                const ctx = canvas.getContext('2d')
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+                canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.7)
+            }
+            img.src = e.target.result
+        }
+        reader.readAsDataURL(file)
+    })
+}
 
 const GalleryManager = () => {
     const { gallery, updateGallery } = useData()
@@ -65,9 +86,10 @@ const GalleryManager = () => {
         try {
             const newImages = []
             for (const file of files) {
+                const compressed = await compressImage(file)
                 const path = `gallery/${Date.now()}_${file.name}`
                 const imgRef = storageRef(storage, path)
-                await uploadBytes(imgRef, file)
+                await uploadBytes(imgRef, compressed)
                 const url = await getDownloadURL(imgRef)
                 newImages.push(url)
             }
@@ -87,8 +109,12 @@ const GalleryManager = () => {
             </div>
 
             {/* Upload Button */}
-            <label className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-[#0071e3]/30 hover:bg-blue-50/30 transition-all ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                <Upload size={16} className="text-[#0071e3]" />
+            <label className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer transition-all ${uploading ? 'border-blue-300 bg-blue-50/50 pointer-events-none' : 'border-gray-200 hover:border-[#0071e3]/30 hover:bg-blue-50/30'}`}>
+                {uploading ? (
+                    <Loader size={16} className="text-[#0071e3] animate-spin" />
+                ) : (
+                    <Upload size={16} className="text-[#0071e3]" />
+                )}
                 <span className="text-sm font-medium text-[#0071e3]">
                     {uploading ? 'Mengupload...' : 'Upload Gambar'}
                 </span>

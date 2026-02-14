@@ -5,9 +5,31 @@ import { useData } from '../../context/DataContext'
 import { storage } from '../../firebase'
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 
+// Compress image before upload for speed
+const compressImage = (file, maxWidth = 400) => {
+    return new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const img = new window.Image()
+            img.onload = () => {
+                const canvas = document.createElement('canvas')
+                const ratio = Math.min(maxWidth / img.width, 1)
+                canvas.width = img.width * ratio
+                canvas.height = img.height * ratio
+                const ctx = canvas.getContext('2d')
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+                canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.7)
+            }
+            img.src = e.target.result
+        }
+        reader.readAsDataURL(file)
+    })
+}
+
 const uploadImage = async (file, path) => {
+    const compressed = await compressImage(file)
     const imgRef = storageRef(storage, path)
-    await uploadBytes(imgRef, file)
+    await uploadBytes(imgRef, compressed)
     return await getDownloadURL(imgRef)
 }
 
@@ -70,13 +92,20 @@ const StructureManager = () => {
                 </div>
             )}
             <div className="flex gap-2">
-                <label className="flex items-center gap-2 px-3 py-2 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-[#0071e3]/30 hover:bg-blue-50/30 transition-all flex-1">
-                    <Upload size={14} className="text-[#0071e3]" />
-                    <span className="text-xs font-medium text-[#0071e3]">Upload</span>
+                <label className={`flex items-center gap-2 px-3 py-2 border-2 border-dashed rounded-xl cursor-pointer transition-all flex-1 ${uploading ? 'border-blue-300 bg-blue-50/50 pointer-events-none' : 'border-gray-200 hover:border-[#0071e3]/30 hover:bg-blue-50/30'}`}>
+                    {uploading ? (
+                        <Loader size={14} className="text-[#0071e3] animate-spin" />
+                    ) : (
+                        <Upload size={14} className="text-[#0071e3]" />
+                    )}
+                    <span className="text-xs font-medium text-[#0071e3]">
+                        {uploading ? 'Mengupload...' : 'Upload'}
+                    </span>
                     <input
                         type="file"
                         accept="image/*"
                         className="hidden"
+                        disabled={uploading}
                         onChange={(e) => handleImageUpload(e.target.files[0], form, setForm)}
                     />
                 </label>
