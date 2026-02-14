@@ -121,10 +121,10 @@ const Navbar = () => {
                 className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-4"
             >
                 <div className={`
-                    relative flex items-center justify-between transition-all duration-500 ease-in-out
+                    relative flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
                     ${isScrolled || isOpen
-                        ? 'w-full max-w-5xl bg-white/80 backdrop-blur-xl shadow-sm border border-white/20'
-                        : 'w-full max-w-4xl bg-white/60 backdrop-blur-md shadow-sm border border-white/10'
+                        ? 'w-full max-w-5xl bg-[rgba(255,255,255,0.65)] backdrop-blur-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/40'
+                        : 'w-full max-w-4xl bg-[rgba(255,255,255,0.50)] backdrop-blur-2xl shadow-sm border border-white/30'
                     }
                     rounded-full px-4 md:px-6 py-2.5 md:py-3
                 `}>
