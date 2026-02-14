@@ -27,15 +27,18 @@ export const DataProvider = ({ children }) => {
     const [structure, setStructure] = useState(() => safeLoad('admin_structure', defaultStructure))
 
     useEffect(() => {
-        localStorage.setItem('admin_members', JSON.stringify(members))
+        try { localStorage.setItem('admin_members', JSON.stringify(members)) }
+        catch (e) { console.warn('localStorage full (members):', e) }
     }, [members])
 
     useEffect(() => {
-        localStorage.setItem('admin_gallery', JSON.stringify(gallery))
+        try { localStorage.setItem('admin_gallery', JSON.stringify(gallery)) }
+        catch (e) { console.warn('localStorage full (gallery):', e) }
     }, [gallery])
 
     useEffect(() => {
-        localStorage.setItem('admin_structure', JSON.stringify(structure))
+        try { localStorage.setItem('admin_structure', JSON.stringify(structure)) }
+        catch (e) { console.warn('localStorage full (structure):', e) }
     }, [structure])
 
     const updateMembers = (newMembers) => setMembers(newMembers)
