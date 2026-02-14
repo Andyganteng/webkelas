@@ -118,7 +118,7 @@ const Navbar = () => {
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, ease: "circOut" }}
-                className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-4"
+                className="fixed top-2 md:top-6 left-0 right-0 z-50 flex justify-center px-2 md:px-4"
             >
                 <div className={`
                     relative flex items-center justify-between transition-all duration-500 ease-in-out
@@ -133,7 +133,7 @@ const Navbar = () => {
                             <img src="/logo.png" alt="Logo" className="w-full h-full object-contain p-1" />
                         </div>
                         <div className="flex flex-col leading-none">
-                            <span className="font-bold text-dark text-base md:text-lg tracking-tight">XI RPL 02</span>
+                            <span className="font-bold text-dark text-base md:text-lg tracking-tight whitespace-nowrap">XI RPL 02</span>
                         </div>
                     </a>
 
