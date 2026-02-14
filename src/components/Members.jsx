@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Instagram, Search } from 'lucide-react'
 import { useState } from 'react'
-import members from '../data/members'
+import { useData } from '../context/DataContext'
 
 // Animation Variants for Stagger Effect
 const containerVariants = {
@@ -26,6 +26,7 @@ const itemVariants = {
 }
 
 const Members = () => {
+    const { members } = useData()
     const [searchTerm, setSearchTerm] = useState('')
 
     const filteredMembers = members.filter(member => {

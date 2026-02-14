@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight, Search, ArrowDown, Clock } from 'lucide-react'
-import gallery from '../data/gallery'
+import { useData } from '../context/DataContext'
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -24,6 +24,7 @@ const cardVariants = {
 }
 
 const Gallery = () => {
+    const { gallery } = useData()
     const [selectedCategory, setSelectedCategory] = useState("All")
     const [selectedImage, setSelectedImage] = useState(null)
     const [searchTerm, setSearchTerm] = useState('')
@@ -115,8 +116,8 @@ const Gallery = () => {
                                 key={cat}
                                 onClick={() => { setSelectedCategory(cat); setVisibleCount(8); }}
                                 className={`px-5 py-2.5 rounded-full font-bold text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === cat
-                                        ? 'bg-[#1d1d1f] text-white shadow-lg'
-                                        : 'bg-[#F5F5F7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]'
+                                    ? 'bg-[#1d1d1f] text-white shadow-lg'
+                                    : 'bg-[#F5F5F7] text-[#86868b] hover:bg-[#e8e8ed] hover:text-[#1d1d1f]'
                                     }`}
                             >
                                 {cat}

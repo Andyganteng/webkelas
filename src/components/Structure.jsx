@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import structure from '../data/structure'
+import { useData } from '../context/DataContext'
 import { Instagram } from 'lucide-react'
 
 const StructureCard = ({ member, role, size = "md", delay = 0 }) => {
@@ -51,6 +51,7 @@ const StructureCard = ({ member, role, size = "md", delay = 0 }) => {
 }
 
 const Structure = () => {
+    const { structure } = useData()
     const getMember = (role) => structure.find(m => m.role === role)
 
     const wali = getMember('Wali Kelas')
