@@ -2,26 +2,8 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Pencil, Trash2, Save, X, Image, PlusCircle, MinusCircle, Upload } from 'lucide-react'
 import { useData } from '../../context/DataContext'
-
-const compressImage = (file, maxWidth = 800) => {
-    return new Promise((resolve) => {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            const img = new window.Image()
-            img.onload = () => {
-                const canvas = document.createElement('canvas')
-                const ratio = Math.min(maxWidth / img.width, 1)
-                canvas.width = img.width * ratio
-                canvas.height = img.height * ratio
-                const ctx = canvas.getContext('2d')
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-                resolve(canvas.toDataURL('image/jpeg', 0.7))
-            }
-            img.src = e.target.result
-        }
-        reader.readAsDataURL(file)
-    })
-}
+import { storage } from '../../firebase'
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 const GalleryManager = () => {
     const { gallery, updateGallery } = useData()
@@ -83,13 +65,16 @@ const GalleryManager = () => {
         try {
             const newImages = []
             for (const file of files) {
-                const dataUrl = await compressImage(file)
-                newImages.push(dataUrl)
+                const path = `gallery/${Date.now()}_${file.name}`
+                const imgRef = storageRef(storage, path)
+                await uploadBytes(imgRef, file)
+                const url = await getDownloadURL(imgRef)
+                newImages.push(url)
             }
             const existingImages = form.images.filter(img => img.trim() !== '')
             setForm({ ...form, images: [...existingImages, ...newImages] })
         } catch (err) {
-            console.error('Upload error:', err)
+            alert('Gagal upload gambar: ' + err.message)
         }
         setUploading(false)
     }

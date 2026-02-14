@@ -1,26 +1,14 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Pencil, Trash2, Save, X, Instagram, Upload } from 'lucide-react'
+import { Plus, Pencil, Trash2, Save, X, Instagram, Upload, Loader } from 'lucide-react'
 import { useData } from '../../context/DataContext'
+import { storage } from '../../firebase'
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 
-const compressImage = (file, maxWidth = 400) => {
-    return new Promise((resolve) => {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            const img = new window.Image()
-            img.onload = () => {
-                const canvas = document.createElement('canvas')
-                const ratio = Math.min(maxWidth / img.width, 1)
-                canvas.width = img.width * ratio
-                canvas.height = img.height * ratio
-                const ctx = canvas.getContext('2d')
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-                resolve(canvas.toDataURL('image/jpeg', 0.7))
-            }
-            img.src = e.target.result
-        }
-        reader.readAsDataURL(file)
-    })
+const uploadImage = async (file, path) => {
+    const imgRef = storageRef(storage, path)
+    await uploadBytes(imgRef, file)
+    return await getDownloadURL(imgRef)
 }
 
 const StructureManager = () => {
@@ -29,6 +17,7 @@ const StructureManager = () => {
     const [editForm, setEditForm] = useState(null)
     const [showAddForm, setShowAddForm] = useState(false)
     const [addForm, setAddForm] = useState({ role: '', name: '', image: '', instagram: '' })
+    const [uploading, setUploading] = useState(false)
 
     const handleEdit = (index) => {
         setEditingIndex(index)
@@ -58,8 +47,15 @@ const StructureManager = () => {
 
     const handleImageUpload = async (file, form, setForm) => {
         if (!file) return
-        const dataUrl = await compressImage(file)
-        setForm({ ...form, image: dataUrl })
+        setUploading(true)
+        try {
+            const path = `structure/${Date.now()}_${file.name}`
+            const url = await uploadImage(file, path)
+            setForm({ ...form, image: url })
+        } catch (e) {
+            alert('Gagal upload gambar: ' + e.message)
+        }
+        setUploading(false)
     }
 
     const ImageUpload = ({ form, setForm }) => (

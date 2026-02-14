@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { db } from '../firebase'
+import { ref, onValue, set } from 'firebase/database'
 import defaultMembers from '../data/members'
 import defaultGallery from '../data/gallery'
 import defaultStructure from '../data/structure'
@@ -7,51 +9,70 @@ const DataContext = createContext()
 
 export const useData = () => useContext(DataContext)
 
-const safeLoad = (key, fallback) => {
-    try {
-        const saved = localStorage.getItem(key)
-        if (saved) {
-            const parsed = JSON.parse(saved)
-            if (Array.isArray(parsed)) return parsed
-        }
-    } catch (e) {
-        console.warn(`Failed to load ${key} from localStorage:`, e)
-        localStorage.removeItem(key)
-    }
-    return fallback
-}
-
 export const DataProvider = ({ children }) => {
-    const [members, setMembers] = useState(() => safeLoad('admin_members', defaultMembers))
-    const [gallery, setGallery] = useState(() => safeLoad('admin_gallery', defaultGallery))
-    const [structure, setStructure] = useState(() => safeLoad('admin_structure', defaultStructure))
+    const [members, setMembers] = useState(defaultMembers)
+    const [gallery, setGallery] = useState(defaultGallery)
+    const [structure, setStructure] = useState(defaultStructure)
+    const [loading, setLoading] = useState(true)
 
+    // Listen to Firebase Realtime Database
     useEffect(() => {
-        try { localStorage.setItem('admin_members', JSON.stringify(members)) }
-        catch (e) { console.warn('localStorage full (members):', e) }
-    }, [members])
+        const membersRef = ref(db, 'members')
+        const galleryRef = ref(db, 'gallery')
+        const structureRef = ref(db, 'structure')
 
-    useEffect(() => {
-        try { localStorage.setItem('admin_gallery', JSON.stringify(gallery)) }
-        catch (e) { console.warn('localStorage full (gallery):', e) }
-    }, [gallery])
+        const unsub1 = onValue(membersRef, (snapshot) => {
+            const data = snapshot.val()
+            if (data && Array.isArray(data)) setMembers(data)
+        }, (err) => console.warn('Firebase members error:', err))
 
-    useEffect(() => {
-        try { localStorage.setItem('admin_structure', JSON.stringify(structure)) }
-        catch (e) { console.warn('localStorage full (structure):', e) }
-    }, [structure])
+        const unsub2 = onValue(galleryRef, (snapshot) => {
+            const data = snapshot.val()
+            if (data && Array.isArray(data)) setGallery(data)
+        }, (err) => console.warn('Firebase gallery error:', err))
 
-    const updateMembers = (newMembers) => setMembers(newMembers)
-    const updateGallery = (newGallery) => setGallery(newGallery)
-    const updateStructure = (newStructure) => setStructure(newStructure)
+        const unsub3 = onValue(structureRef, (snapshot) => {
+            const data = snapshot.val()
+            if (data && Array.isArray(data)) setStructure(data)
+        }, (err) => console.warn('Firebase structure error:', err))
 
-    const resetToDefault = () => {
+        setLoading(false)
+
+        return () => {
+            unsub1()
+            unsub2()
+            unsub3()
+        }
+    }, [])
+
+    // Save functions → write to Firebase
+    const updateMembers = async (newMembers) => {
+        setMembers(newMembers)
+        try { await set(ref(db, 'members'), newMembers) }
+        catch (e) { console.warn('Failed to save members:', e) }
+    }
+
+    const updateGallery = async (newGallery) => {
+        setGallery(newGallery)
+        try { await set(ref(db, 'gallery'), newGallery) }
+        catch (e) { console.warn('Failed to save gallery:', e) }
+    }
+
+    const updateStructure = async (newStructure) => {
+        setStructure(newStructure)
+        try { await set(ref(db, 'structure'), newStructure) }
+        catch (e) { console.warn('Failed to save structure:', e) }
+    }
+
+    const resetToDefault = async () => {
         setMembers(defaultMembers)
         setGallery(defaultGallery)
         setStructure(defaultStructure)
-        localStorage.removeItem('admin_members')
-        localStorage.removeItem('admin_gallery')
-        localStorage.removeItem('admin_structure')
+        try {
+            await set(ref(db, 'members'), defaultMembers)
+            await set(ref(db, 'gallery'), defaultGallery)
+            await set(ref(db, 'structure'), defaultStructure)
+        } catch (e) { console.warn('Failed to reset:', e) }
     }
 
     return (
@@ -59,7 +80,8 @@ export const DataProvider = ({ children }) => {
             members, updateMembers,
             gallery, updateGallery,
             structure, updateStructure,
-            resetToDefault
+            resetToDefault,
+            loading
         }}>
             {children}
         </DataContext.Provider>
