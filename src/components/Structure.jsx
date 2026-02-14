@@ -93,16 +93,21 @@ const Structure = () => {
 
                 <div className="relative flex flex-col items-center">
                     {/* SVG Connector Lines */}
-                    <svg className="absolute top-0 left-0 w-full h-full pointer-events-none stroke-[#e5e5ea] fill-none" style={{ minHeight: '1200px' }}>
+                    <svg
+                        className="absolute top-0 left-0 w-full h-full pointer-events-none stroke-[#e5e5ea] fill-none"
+                        viewBox="0 0 100 1200"
+                        preserveAspectRatio="none"
+                        style={{ minHeight: '1200px' }}
+                    >
                         {/* Wali to Ketua */}
                         <motion.path
                             variants={pathVariants}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
-                            d="M 50% 120 L 50% 210"
+                            d="M 50 120 L 50 210"
                             className="hidden md:block"
-                            strokeWidth="1.5"
+                            strokeWidth="0.5"
                         />
 
                         {/* Ketua to Wakil */}
@@ -111,9 +116,9 @@ const Structure = () => {
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
-                            d="M 50% 340 L 50% 430"
+                            d="M 50 340 L 50 430"
                             className="hidden md:block"
-                            strokeWidth="1.5"
+                            strokeWidth="0.5"
                         />
 
                         {/* Wakil to Split */}
@@ -122,9 +127,9 @@ const Structure = () => {
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
-                            d="M 50% 560 L 50% 640"
+                            d="M 50 560 L 50 640"
                             className="hidden md:block"
-                            strokeWidth="1.5"
+                            strokeWidth="0.5"
                         />
 
                         {/* Split Horizontal */}
@@ -133,9 +138,9 @@ const Structure = () => {
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
-                            d="M 25% 640 L 75% 640"
+                            d="M 25 640 L 75 640"
                             className="hidden md:block"
-                            strokeWidth="1.5"
+                            strokeWidth="0.5"
                         />
 
                         {/* Down to branches */}
@@ -144,18 +149,18 @@ const Structure = () => {
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
-                            d="M 25% 640 L 25% 720"
+                            d="M 25 640 L 25 720"
                             className="hidden md:block"
-                            strokeWidth="1.5"
+                            strokeWidth="0.5"
                         />
                         <motion.path
                             variants={pathVariants}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
-                            d="M 75% 640 L 75% 720"
+                            d="M 75 640 L 75 720"
                             className="hidden md:block"
-                            strokeWidth="1.5"
+                            strokeWidth="0.5"
                         />
                     </svg>
 
