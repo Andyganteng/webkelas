@@ -203,10 +203,10 @@ const Hero = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="mb-12 text-[#1d1d1f]"
+                            className="mb-8 md:mb-12 text-[#1d1d1f]"
                         >
-                            {/* Line 1: "XI RPL 02." */}
-                            <span className="block text-6xl md:text-8xl font-bold leading-tight" style={{ fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif", letterSpacing: '-0.04em' }}>
+                            {/* Line 1: "Welcome to Web" */}
+                            <span className="block text-4xl md:text-8xl font-bold leading-tight" style={{ fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif", letterSpacing: '-0.04em' }}>
                                 {"Welcome to Web".split("").map((char, i) => (
                                     <motion.span
                                         key={`line1-${i}`}
@@ -226,8 +226,8 @@ const Hero = () => {
                                 ))}
                             </span>
 
-                            {/* Line 2: "Beyond Code." with gradient */}
-                            <span className="block text-5xl md:text-7xl font-bold mt-2" style={{ fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif", letterSpacing: '-0.03em' }}>
+                            {/* Line 2: "XI RPL 02." with gradient */}
+                            <span className="block text-4xl md:text-7xl font-bold mt-2" style={{ fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif", letterSpacing: '-0.03em' }}>
                                 {"XI RPL 02.".split("").map((char, i) => (
                                     <motion.span
                                         key={`line2-${i}`}
@@ -285,7 +285,7 @@ const Hero = () => {
                                         <img
                                             src="/logo.png"
                                             alt="Logo XI RPL 02"
-                                            className="w-64 h-64 md:w-72 md:h-72 object-contain"
+                                            className="w-48 h-48 md:w-72 md:h-72 object-contain"
                                         />
                                     </motion.div>
                                 </motion.div>
@@ -299,7 +299,7 @@ const Hero = () => {
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -30 }}
                                             transition={{ duration: 0.6, ease: "easeInOut" }}
-                                            className="text-xl md:text-3xl text-[#1d1d1f] font-bold tracking-tight leading-[1.15] absolute text-center px-4"
+                                            className="text-lg md:text-3xl text-[#1d1d1f] font-bold tracking-tight leading-[1.15] absolute text-center px-4"
                                             style={{ fontFamily: "'SF Pro Display', 'Inter', system-ui, sans-serif" }}
                                         >
                                             {quotes[quoteIndex]}

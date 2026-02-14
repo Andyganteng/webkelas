@@ -29,13 +29,13 @@ body {
 
 /* Typography Utilities - Apple Style */
 .heading-xl {
-    @apply text-6xl md:text-8xl font-semibold tracking-tight leading-tight text-[#1d1d1f];
+    @apply text-5xl md:text-8xl font-semibold tracking-tight leading-tight text-[#1d1d1f];
     letter-spacing: -0.02em;
     /* Tighter tracking for large text */
 }
 
 .heading-lg {
-    @apply text-4xl md:text-6xl font-semibold tracking-tight text-[#1d1d1f];
+    @apply text-3xl md:text-6xl font-semibold tracking-tight text-[#1d1d1f];
     letter-spacing: -0.015em;
 }
 
