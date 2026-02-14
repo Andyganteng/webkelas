@@ -118,16 +118,15 @@ const Navbar = () => {
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, ease: "circOut" }}
-                className="fixed top-0 md:top-6 left-0 right-0 z-50 flex justify-center px-0 md:px-4"
+                className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-4"
             >
                 <div className={`
                     relative flex items-center justify-between transition-all duration-500 ease-in-out
                     ${isScrolled || isOpen
-                        ? 'w-full max-w-5xl bg-white/90 backdrop-blur-xl shadow-md border-b border-white/20'
-                        : 'w-full max-w-4xl bg-white/80 backdrop-blur-md shadow-sm border-b border-white/10'
+                        ? 'w-full max-w-5xl bg-white/80 backdrop-blur-xl shadow-sm border border-white/20'
+                        : 'w-full max-w-4xl bg-white/60 backdrop-blur-md shadow-sm border border-white/10'
                     }
-                    rounded-none border-b md:rounded-full md:border
-                    px-4 py-3 md:px-6 md:py-3
+                    rounded-full px-4 md:px-6 py-2.5 md:py-3
                 `}>
                     <a href="#" className="flex items-center gap-3 group">
                         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
