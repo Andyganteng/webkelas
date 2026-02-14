@@ -16,17 +16,10 @@ const tabs = [
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('members')
     const navigate = useNavigate()
-    const { resetToDefault } = useData()
 
     const handleLogout = () => {
         sessionStorage.removeItem('admin_auth')
         navigate('/admin')
-    }
-
-    const handleReset = () => {
-        if (window.confirm('Reset semua data ke default? Perubahan akan hilang.')) {
-            resetToDefault()
-        }
     }
 
     const isAuth = sessionStorage.getItem('admin_auth') === 'true'
@@ -55,9 +48,6 @@ const AdminDashboard = () => {
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <button onClick={handleReset} className="text-[#007aff] text-[14px] font-medium" title="Reset">
-                                <RotateCcw size={18} />
-                            </button>
                             <button onClick={handleLogout} className="text-[#ff3b30] text-[14px] font-medium">
                                 <LogOut size={18} />
                             </button>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Pencil, Trash2, Save, X, Image, PlusCircle, MinusCircle, Upload, Loader } from 'lucide-react'
+import { Plus, Pencil, Trash2, Save, X, Image, PlusCircle, MinusCircle, Upload, Loader, Eye } from 'lucide-react'
 import { useData } from '../../context/DataContext'
 
 // Compress image to small base64 for storing in Realtime Database
@@ -146,8 +146,66 @@ const GalleryManager = () => {
         </div>
     )
 
+    const [showPreview, setShowPreview] = useState(false)
+
+    // ... (rest of existing code)
+
     return (
         <div>
+            {/* Preview Modal */}
+            <AnimatePresence>
+                {showPreview && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+                        onClick={() => setShowPreview(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <h3 className="text-lg font-bold mb-4 text-[#1d1d1f]">Preview Postingan</h3>
+                            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                                <div className="h-40 bg-[#F5F5F7] relative overflow-hidden">
+                                    {addForm.images[0] && addForm.images[0] !== '' ? (
+                                        <img src={addForm.images[0]} alt={addForm.title} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-[#d1d1d6]">
+                                            <Image size={40} />
+                                        </div>
+                                    )}
+                                    <div className="absolute bottom-3 left-3">
+                                        <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold uppercase tracking-wider text-[#0071e3]">
+                                            {addForm.category || 'Kategori'}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="p-5 space-y-2">
+                                    <h3 className="font-bold text-[#1d1d1f]">{addForm.title || 'Judul Album'}</h3>
+                                    <p className="text-sm text-[#86868b] line-clamp-2">{addForm.description || 'Deskripsi album akan muncul di sini...'}</p>
+                                    <div className="flex items-center gap-3 text-xs text-[#86868b] font-medium">
+                                        <span>{addForm.date || 'Tahun'}</span>
+                                        <span>•</span>
+                                        <span>{addForm.images.filter(i => i.trim()).length} foto</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setShowPreview(false)}
+                                className="mt-6 w-full py-2.5 bg-[#0071e3] text-white font-bold rounded-xl hover:bg-[#0077ED] transition-all"
+                            >
+                                Tutup Preview
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div>
@@ -180,6 +238,9 @@ const GalleryManager = () => {
                                 className="w-full px-4 py-3 bg-[#F5F5F7] rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:bg-white transition-all text-sm font-medium resize-none" />
                             <ImageFields form={addForm} setForm={setAddForm} />
                             <div className="flex gap-2 pt-2">
+                                <button onClick={() => setShowPreview(true)} className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-white text-sm font-bold rounded-xl hover:bg-black transition-all">
+                                    <Eye size={14} /> Preview
+                                </button>
                                 <button onClick={handleAdd} className="flex items-center gap-2 px-4 py-2 bg-[#0071e3] text-white text-sm font-bold rounded-xl hover:bg-[#0077ED] transition-all">
                                     <Save size={14} /> Simpan
                                 </button>
