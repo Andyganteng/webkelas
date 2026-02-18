@@ -59,11 +59,16 @@ const RamadanCountdown = () => {
         >
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 z-[-1]">
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 2, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10"
+                />
                 <motion.img
-                    initial={{ scale: 1.1 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 10, ease: "easeOut" }}
+                    initial={{ scale: 1.2, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 2.5, ease: "easeOut" }}
                     src={bgImage}
                     alt="Background"
                     className="w-full h-full object-cover"
