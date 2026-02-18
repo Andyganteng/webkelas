@@ -13,6 +13,11 @@ export const DataProvider = ({ children }) => {
     const [members, setMembers] = useState(defaultMembers)
     const [gallery, setGallery] = useState(defaultGallery)
     const [structure, setStructure] = useState(defaultStructure)
+    const [ramadan, setRamadan] = useState({
+        isActive: false,
+        targetDate: new Date().toISOString(),
+        backgroundImage: null
+    })
     const [loading, setLoading] = useState(true)
 
     // Listen to Firebase Realtime Database
@@ -20,6 +25,7 @@ export const DataProvider = ({ children }) => {
         const membersRef = ref(db, 'members')
         const galleryRef = ref(db, 'gallery')
         const structureRef = ref(db, 'structure')
+        const ramadanRef = ref(db, 'ramadan')
 
         const unsub1 = onValue(membersRef, (snapshot) => {
             const data = snapshot.val()
@@ -36,12 +42,18 @@ export const DataProvider = ({ children }) => {
             if (data && Array.isArray(data)) setStructure(data)
         }, (err) => console.warn('Firebase structure error:', err))
 
+        const unsub4 = onValue(ramadanRef, (snapshot) => {
+            const data = snapshot.val()
+            if (data) setRamadan(data)
+        }, (err) => console.warn('Firebase ramadan error:', err))
+
         setLoading(false)
 
         return () => {
             unsub1()
             unsub2()
             unsub3()
+            unsub4()
         }
     }, [])
 
@@ -64,6 +76,12 @@ export const DataProvider = ({ children }) => {
         catch (e) { console.warn('Failed to save structure:', e) }
     }
 
+    const updateRamadan = async (newRamadan) => {
+        setRamadan(newRamadan)
+        try { await set(ref(db, 'ramadan'), newRamadan) }
+        catch (e) { console.warn('Failed to save ramadan settings:', e) }
+    }
+
     const resetToDefault = async () => {
         setMembers(defaultMembers)
         setGallery(defaultGallery)
@@ -80,6 +98,7 @@ export const DataProvider = ({ children }) => {
             members, updateMembers,
             gallery, updateGallery,
             structure, updateStructure,
+            ramadan, updateRamadan,
             resetToDefault,
             loading
         }}>

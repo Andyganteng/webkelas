@@ -12,6 +12,7 @@ import AdminLogin from './components/admin/AdminLogin'
 import AdminDashboard from './components/admin/AdminDashboard'
 import { DataProvider } from './context/DataContext'
 import { AnimatePresence } from 'framer-motion'
+// import RamadanCountdown from './components/RamadanCountdown' // Removed for Hero integration
 
 function MainSite() {
     const [loading, setLoading] = useState(true)
@@ -34,6 +35,10 @@ function MainSite() {
             })
         })
     }, [])
+
+    // Determine what to show
+    // 1. If loading is true -> Show Loading
+    // 2. Else -> Show Main Site
 
     return (
         <AnimatePresence mode="wait">

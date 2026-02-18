@@ -1,5 +1,7 @@
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useData } from '../context/DataContext'
+import RamadanCountdown from './RamadanCountdown'
 
 const quotes = [
     "Membangun masa depan, satu baris kode di satu waktu.",
@@ -132,6 +134,7 @@ const ParticleBackground = () => {
 
 // ========== Hero Component ==========
 const Hero = () => {
+    const { ramadan } = useData()
     const { scrollY } = useScroll()
     const [quoteIndex, setQuoteIndex] = useState(0)
     const [currentDate, setCurrentDate] = useState('')
@@ -159,6 +162,11 @@ const Hero = () => {
     const yLogo = useTransform(scrollY, [0, 400], [0, -100])
     const scaleLogo = useTransform(scrollY, [0, 400], [1, 0.9])
     const opacityLogo = useTransform(scrollY, [0, 400], [1, 0.5])
+
+    // If Ramadan countdown is active, show it instead of standard Hero
+    if (ramadan?.isActive) {
+        return <RamadanCountdown />
+    }
 
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-20 bg-[#F5F5F7]">

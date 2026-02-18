@@ -1,16 +1,18 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Users, Image, Network, LogOut, RotateCcw, ChevronLeft } from 'lucide-react'
+import { Users, Image, Network, LogOut, RotateCcw, ChevronLeft, Moon } from 'lucide-react'
 import MembersManager from './MembersManager'
 import GalleryManager from './GalleryManager'
 import StructureManager from './StructureManager'
+import RamadanManager from './RamadanManager'
 import { useData } from '../../context/DataContext'
 
 const tabs = [
     { id: 'members', label: 'Anggota', icon: Users },
     { id: 'gallery', label: 'Galeri', icon: Image },
     { id: 'structure', label: 'Struktur', icon: Network },
+    { id: 'ramadan', label: 'Ramadhan', icon: Moon },
 ]
 
 const AdminDashboard = () => {
@@ -93,6 +95,7 @@ const AdminDashboard = () => {
                         {activeTab === 'members' && <MembersManager />}
                         {activeTab === 'gallery' && <GalleryManager />}
                         {activeTab === 'structure' && <StructureManager />}
+                        {activeTab === 'ramadan' && <RamadanManager />}
                     </motion.div>
                 </AnimatePresence>
             </div>
