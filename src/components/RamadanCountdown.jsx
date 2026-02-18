@@ -31,9 +31,9 @@ const RamadanCountdown = () => {
     }, [ramadan])
 
     const handleExplore = () => {
-        const structureSection = document.getElementById('structure')
-        if (structureSection) {
-            structureSection.scrollIntoView({ behavior: 'smooth' })
+        const memberSection = document.getElementById('anggota')
+        if (memberSection) {
+            memberSection.scrollIntoView({ behavior: 'smooth' })
         }
     }
 
@@ -59,8 +59,7 @@ const RamadanCountdown = () => {
         >
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 z-[-1]">
-                <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
                 <motion.img
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1 }}
@@ -75,7 +74,7 @@ const RamadanCountdown = () => {
             <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.2 }}
                 className="mt-8 text-center"
             >
                 <p className="text-sm font-medium tracking-[0.2em] uppercase text-white/80 mb-2">Counting Down To</p>
@@ -90,7 +89,7 @@ const RamadanCountdown = () => {
                             key={unit}
                             initial={{ y: 40, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.8 + (index * 0.1), type: "spring", stiffness: 100 }}
+                            transition={{ delay: 0.3 + (index * 0.1), type: "spring", stiffness: 100 }}
                             className="flex flex-col items-center p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 shadow-2xl"
                         >
                             <span className="text-4xl sm:text-6xl md:text-7xl font-thin tabular-nums tracking-tighter">
