@@ -41,7 +41,7 @@ const Footer = () => {
                     </div>
 
                     <a
-                        href="https://andymy.wuaze.com"
+                        href="https://andyz.my.id/"
                         target="_blank"
                         className="group flex items-center gap-2 text-xs hover:text-[#1d1d1f] transition-colors"
                     >
