@@ -25,18 +25,18 @@ export default function ProfileCard({ member }) {
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
 
       <motion.div 
-        className="absolute bottom-0 left-0 w-full p-4 md:p-6 z-20 flex flex-col justify-end translate-y-2 md:translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
+        className="absolute bottom-0 left-0 w-full p-2 md:p-6 z-20 flex flex-col justify-end translate-y-1 md:translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
       >
-        <h3 className="text-white text-base md:text-xl font-bold mb-1 tracking-tight">{member.name}</h3>
-        {member.role && <p className="text-blue-400 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 md:mb-3">{member.role}</p>}
+        <h3 className="text-white text-[10px] md:text-xl font-bold mb-0.5 tracking-tight line-clamp-1">{member.name}</h3>
+        {member.role && <p className="text-blue-400 text-[8px] md:text-xs font-bold uppercase tracking-widest mb-1 md:mb-3">{member.role}</p>}
         
         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
           {member.instagram ? (
-            <a href={member.instagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full text-white text-[10px] md:text-sm font-medium hover:bg-white hover:text-black transition-colors">
-              <Instagram size={12} className="md:size-4" /> @instagram
+            <a href={member.instagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-md px-2 py-1 md:px-4 md:py-2 rounded-full text-white text-[8px] md:text-sm font-medium hover:bg-white hover:text-black transition-colors">
+              <Instagram size={10} className="md:size-4" /> @ig
             </a>
           ) : (
-            <span className="text-white/60 text-[10px] md:text-xs font-medium bg-black/40 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full backdrop-blur-md">No Social</span>
+            <span className="text-white/60 text-[8px] md:text-xs font-medium bg-black/40 px-2 py-1 md:px-3 md:py-1.5 rounded-full backdrop-blur-md">None</span>
           )}
         </div>
       </motion.div>

@@ -75,23 +75,25 @@ export default function Structure() {
           </motion.div>
         </div>
 
-        <div className="flex flex-col gap-12 w-full">
-          <StructureCard member={wali} role="Wali Kelas" isLarge delay={0.1} />
-          <StructureCard member={ketua} role="Ketua Kelas" isLarge delay={0.2} />
-          <StructureCard member={wakil} role="Wakil Ketua" isLarge delay={0.3} />
+        <div className="grid grid-cols-2 md:flex md:flex-col gap-6 md:gap-12 w-full">
+          <div className="col-span-2 md:col-span-1">
+            <StructureCard member={wali} role="Wali Kelas" isLarge delay={0.1} />
+          </div>
+          <StructureCard member={ketua} role="Ketua Kelas" delay={0.2} />
+          <StructureCard member={wakil} role="Wakil Ketua" delay={0.3} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-8 w-full max-w-4xl mx-auto mt-8">
-            <div className="space-y-12">
+          <div className="grid grid-cols-2 gap-6 md:gap-8 w-full max-w-4xl mx-auto mt-8 col-span-2">
+            <div className="space-y-6 md:space-y-12">
               <div className="text-center">
-                <span className="text-[#86868b] text-xs font-bold uppercase tracking-widest">Sekretaris</span>
+                <span className="text-[#86868b] text-[10px] md:text-xs font-bold uppercase tracking-widest">Sekretaris</span>
               </div>
               <StructureCard member={sek1} role="Sekretaris 1" delay={0.4} />
               <StructureCard member={sek2} role="Sekretaris 2" delay={0.5} />
             </div>
 
-            <div className="space-y-12">
+            <div className="space-y-6 md:space-y-12">
               <div className="text-center">
-                <span className="text-[#86868b] text-xs font-bold uppercase tracking-widest">Bendahara</span>
+                <span className="text-[#86868b] text-[10px] md:text-xs font-bold uppercase tracking-widest">Bendahara</span>
               </div>
               <StructureCard member={ben1} role="Bendahara 1" delay={0.4} />
               <StructureCard member={ben2} role="Bendahara 2" delay={0.5} />
