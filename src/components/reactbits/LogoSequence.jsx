@@ -8,16 +8,10 @@ const LogoSequence = ({ className = "" }) => {
   const canvasRef = useRef(null);
   const [frameIndex, setFrameIndex] = useState(0);
   const imagesRef = useRef([]);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    // Limit frames on mobile to save memory
-    const limit = window.innerWidth < 768 ? 80 : logoFrames.length;
-    logoFrames.slice(0, limit).forEach((frame, index) => {
+    // Load frames
+    logoFrames.forEach((frame, index) => {
       const img = new Image();
       img.src = `/logoanimasi/${frame}`;
       img.onload = () => {
@@ -25,29 +19,43 @@ const LogoSequence = ({ className = "" }) => {
       };
     });
 
-    const fps = window.innerWidth < 768 ? 20 : 30;
+    const fps = 30;
     const interval = setInterval(() => {
-      setFrameIndex((prev) => (prev + 1) % limit);
+      setFrameIndex((prev) => (prev + 1) % logoFrames.length);
     }, 1000 / fps);
 
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('resize', checkMobile);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: false }); // Disable alpha for speed
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const img = imagesRef.current[frameIndex];
 
     if (img && img.complete) {
       canvas.width = img.width;
       canvas.height = img.height;
       ctx.drawImage(img, 0, 0);
+
+      // Perform background removal (optimized pixel loop)
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      const data32 = new Uint32Array(data.buffer);
       
-      // Background removal is now handled by CSS mix-blend-mode for ZERO CPU cost
+      for (let i = 0; i < data32.length; i++) {
+        const pixel = data32[i];
+        const r = pixel & 0xFF;
+        const g = (pixel >> 8) & 0xFF;
+        const b = (pixel >> 16) & 0xFF;
+        
+        // Threshold for white/near-white background
+        if (r > 240 && g > 240 && b > 240) {
+          data32[i] = 0; // Set to transparent
+        }
+      }
+      
+      ctx.putImageData(imageData, 0, 0);
     }
   }, [frameIndex]);
 
@@ -55,11 +63,7 @@ const LogoSequence = ({ className = "" }) => {
     <canvas 
       ref={canvasRef}
       className={`${className} will-change-transform`}
-      style={{ 
-        imageRendering: 'auto', 
-        touchAction: 'none',
-        mixBlendMode: 'multiply' // Super fast background removal
-      }}
+      style={{ imageRendering: 'auto' }}
     />
   );
 };
