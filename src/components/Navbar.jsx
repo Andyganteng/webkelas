@@ -1,221 +1,181 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, LogIn, Shield } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Home, Grid, Users, Image as ImageIcon, BookOpen, LogIn, Shield } from 'lucide-react';
+import GooeyNav from './reactbits/GooeyNav';
+import Dock from './reactbits/Dock';
 
 const playNotifSound = () => {
-    try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)()
-        const playTone = (freq, start, dur) => {
-            const osc = ctx.createOscillator()
-            const gain = ctx.createGain()
-            osc.connect(gain)
-            gain.connect(ctx.destination)
-            osc.type = 'sine'
-            osc.frequency.value = freq
-            gain.gain.setValueAtTime(0.18, ctx.currentTime + start)
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur)
-            osc.start(ctx.currentTime + start)
-            osc.stop(ctx.currentTime + start + dur)
-        }
-        // iPhone low battery warning: two descending tones
-        playTone(987, 0, 0.15)
-        playTone(740, 0.18, 0.15)
-        playTone(987, 0.5, 0.15)
-        playTone(740, 0.68, 0.15)
-    } catch (e) { }
-}
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const playTone = (freq, start, dur) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.18, ctx.currentTime + start);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
+      osc.start(ctx.currentTime + start);
+      osc.stop(ctx.currentTime + start + dur);
+    };
+    playTone(987, 0, 0.15);
+    playTone(740, 0.18, 0.15);
+    playTone(987, 0.5, 0.15);
+    playTone(740, 0.68, 0.15);
+  } catch (e) {}
+};
 
-const Navbar = () => {
-    const [isScrolled, setIsScrolled] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
-    const [showNotif, setShowNotif] = useState(false)
+const links = [
+  { id: 'home', label: 'Home', icon: Home, href: '/' },
+  { id: 'struktur', label: 'Struktur', icon: Grid, href: '/#struktur' },
+  { id: 'anggota', label: 'Anggota', icon: Users, href: '/#anggota' },
+  { id: 'galeri', label: 'Galeri', icon: ImageIcon, href: '/gallery' },
+  { id: 'kontak', label: 'Guestbook', icon: BookOpen, href: '/#kontak' },
+];
 
-    useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 20)
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
+const mobileLinks = [...links, { id: 'login', label: 'Login', icon: LogIn, href: '/admin' }];
 
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden'
-        } else {
-            document.body.style.overflow = ''
-        }
-        return () => { document.body.style.overflow = '' }
-    }, [isOpen])
+export default function Navbar() {
+  const [activeId, setActiveId] = useState('home');
+  const [showNotif, setShowNotif] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    // Redirect only when user confirms
-    const handleConfirm = () => {
-        setShowNotif(false)
-        window.location.href = '/admin'
+  useEffect(() => {
+    if (location.pathname === '/gallery') {
+      setActiveId('galeri');
+      return;
     }
 
-    const handleLoginClick = (e) => {
-        e.preventDefault()
-        setIsOpen(false)
-        setShowNotif(true)
-        playNotifSound()
+    const handleScroll = () => {
+      const sections = ['struktur', 'anggota', 'kontak'];
+      let current = 'home';
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el && window.scrollY >= el.offsetTop - 150) {
+          current = section;
+        }
+      }
+      setActiveId(current);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [location.pathname]);
+
+  const handleSelect = (link) => {
+    if (link.id === 'login') {
+      handleLoginClick();
+      return;
+    }
+    
+    setActiveId(link.id);
+
+    if (link.href === '/gallery') {
+      navigate('/gallery');
+      return;
     }
 
-    const navLinks = [
-        { title: 'Home', href: '#' },
-        { title: 'Structure', href: '#struktur' },
-        { title: 'Members', href: '#anggota' },
-        { title: 'Gallery', href: '#galeri' },
-        { title: 'Guestbook', href: '#kontak' },
-    ]
+    if (location.pathname !== '/') {
+      navigate(link.href);
+      return;
+    }
 
-    return (
-        <>
-            {/* iPhone Alert Dialog — Centered */}
-            <AnimatePresence>
-                {showNotif && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center px-6"
-                        style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
-                    >
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.7 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.7 }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                            className="w-full max-w-[270px] bg-white/95 backdrop-blur-2xl rounded-[14px] overflow-hidden shadow-2xl"
-                        >
-                            {/* Content */}
-                            <div className="px-4 pt-5 pb-4 text-center">
-                                <h3 className="text-[17px] font-semibold text-[#1c1c1e] mb-1">Peringatan</h3>
-                                <p className="text-[13px] text-[#3a3a3c] leading-relaxed">
-                                    Hanya admin yang diperbolehkan login. Akses tanpa izin akan ditolak.
-                                </p>
-                            </div>
-                            {/* Buttons */}
-                            <div className="border-t border-[#e5e5ea]">
-                                <div className="flex">
-                                    <button
-                                        onClick={() => setShowNotif(false)}
-                                        className="flex-1 py-[11px] text-[17px] text-[#007aff] font-normal border-r border-[#e5e5ea] active:bg-gray-100 transition-colors"
-                                    >
-                                        Batal
-                                    </button>
-                                    <button
-                                        onClick={handleConfirm}
-                                        className="flex-1 py-[11px] text-[17px] text-[#007aff] font-semibold active:bg-gray-100 transition-colors"
-                                    >
-                                        Lanjutkan
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+    // Smooth scroll if on home page
+    const targetId = link.href.split('#')[1];
+    if (targetId) {
+        const target = document.getElementById(targetId);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
-            <motion.nav
-                initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, ease: "circOut" }}
-                className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-4"
+  const handleLoginClick = () => {
+    setShowNotif(true);
+    playNotifSound();
+  };
+
+  const confirmLogin = () => {
+    setShowNotif(false);
+    navigate('/admin');
+  };
+
+  return (
+    <>
+      <AnimatePresence>
+        {showNotif && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center px-6 bg-black/40 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              className="bg-white/90 backdrop-blur-2xl rounded-2xl max-w-xs w-full overflow-hidden shadow-2xl border border-white/50"
             >
-                <div className={`
-                    relative flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
-                    ${isScrolled || isOpen
-                        ? 'w-full max-w-5xl bg-[rgba(255,255,255,0.65)] backdrop-blur-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/40'
-                        : 'w-full max-w-4xl bg-[rgba(255,255,255,0.50)] backdrop-blur-2xl shadow-sm border border-white/30'
-                    }
-                    rounded-full px-4 md:px-6 py-2.5 md:py-3
-                `}>
-                    <a href="#" className="flex items-center gap-3 group">
-                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain p-1" />
-                        </div>
-                        <div className="flex flex-col leading-none">
-                            <span className="font-bold text-dark text-base md:text-lg tracking-tight whitespace-nowrap">XI RPL 02</span>
-                        </div>
-                    </a>
-
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center gap-1">
-                        {navLinks.map((link, index) => (
-                            <a
-                                key={index}
-                                href={link.href}
-                                className="px-5 py-2 text-sm font-medium text-gray-600 hover:text-white hover:bg-black rounded-full transition-all duration-300"
-                            >
-                                {link.title}
-                            </a>
-                        ))}
-                        <button
-                            onClick={handleLoginClick}
-                            className="ml-2 px-5 py-2 text-sm font-bold text-white bg-[#E8491D] hover:bg-[#D63E14] rounded-full transition-all duration-300 flex items-center gap-2 shadow-sm"
-                        >
-                            <LogIn size={14} />
-                            Login
-                        </button>
-                    </div>
-
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-dark hover:bg-black hover:text-white transition-all z-50"
-                    >
-                        {isOpen ? <X size={20} /> : <Menu size={20} />}
-                    </button>
+              <div className="p-6 text-center">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500">
+                  <Shield size={24} />
                 </div>
-            </motion.nav>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Login Admin</h3>
+                <p className="text-sm text-gray-600">Anda akan diarahkan ke halaman login admin. Lanjutkan?</p>
+              </div>
+              <div className="flex border-t border-gray-200">
+                <button onClick={() => setShowNotif(false)} className="flex-1 py-3 text-sm font-semibold text-gray-600 border-r border-gray-200 hover:bg-gray-50 active:bg-gray-100">Batal</button>
+                <button onClick={confirmLogin} className="flex-1 py-3 text-sm font-bold text-blue-600 hover:bg-blue-50 active:bg-blue-100">Lanjutkan</button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Mobile Menu - Fullscreen */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="fixed inset-0 z-40 bg-white/95 backdrop-blur-3xl md:hidden flex flex-col items-center justify-center"
-                    >
-                        <div className="flex flex-col items-center gap-3 w-full px-8">
-                            {navLinks.map((link, index) => (
-                                <motion.a
-                                    key={index}
-                                    href={link.href}
-                                    onClick={() => setIsOpen(false)}
-                                    initial={{ y: 30, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    exit={{ y: 20, opacity: 0 }}
-                                    transition={{ delay: 0.05 * index, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                    className="text-3xl font-bold text-[#1d1d1f] hover:text-[#0071e3] transition-colors py-3"
-                                >
-                                    {link.title}
-                                </motion.a>
-                            ))}
-                            <motion.button
-                                onClick={handleLoginClick}
-                                initial={{ y: 30, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                exit={{ y: 20, opacity: 0 }}
-                                transition={{ delay: 0.05 * navLinks.length, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="mt-6 px-10 py-3.5 bg-[#E8491D] hover:bg-[#D63E14] text-white text-base md:text-lg font-bold rounded-full transition-all flex items-center gap-3 shadow-lg"
-                            >
-                                <LogIn size={20} />
-                                Login Admin
-                            </motion.button>
-                        </div>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.4 }}
-                            className="absolute bottom-10 text-[#86868b] text-sm font-medium"
-                        >
-                            XI RPL 02 — SMK PGRI 01 Sukorejo
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
-    )
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="fixed top-6 left-0 right-0 z-50 hidden md:flex justify-center"
+      >
+        <div className="flex items-center gap-6">
+          <a href="/" className="flex items-center justify-center hover:scale-105 transition-transform">
+            {/* Logo made larger */}
+            <img src="/logo.png" alt="Logo" className="h-16 md:h-20 object-contain" />
+          </a>
+          
+          <GooeyNav 
+            links={links} 
+            activeId={activeId} 
+            onSelect={handleSelect} 
+          />
+
+          <button
+            onClick={handleLoginClick}
+            className="w-12 h-12 bg-[#1d1d1f] rounded-full flex items-center justify-center text-white shadow-md hover:bg-black hover:scale-105 transition-transform"
+          >
+            <LogIn size={20} />
+          </button>
+        </div>
+      </motion.nav>
+
+      <motion.div
+        initial={{ y: 100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+        className="fixed bottom-6 left-0 right-0 z-50 md:hidden flex justify-center pointer-events-none"
+      >
+        <div className="pointer-events-auto">
+          <Dock 
+            items={mobileLinks}
+            activeId={activeId}
+            onSelect={handleSelect}
+          />
+        </div>
+      </motion.div>
+    </>
+  );
 }
-
-export default Navbar

@@ -13,8 +13,10 @@ export const DataProvider = ({ children }) => {
     const [members, setMembers] = useState(defaultMembers)
     const [gallery, setGallery] = useState(defaultGallery)
     const [structure, setStructure] = useState(defaultStructure)
-    const [ramadan, setRamadan] = useState({
+    const [eventData, setEventData] = useState({
         isActive: false,
+        title: 'Ramadhan 1447 H',
+        description: 'Counting Down To',
         targetDate: new Date().toISOString(),
         backgroundImage: null
     })
@@ -25,7 +27,7 @@ export const DataProvider = ({ children }) => {
         const membersRef = ref(db, 'members')
         const galleryRef = ref(db, 'gallery')
         const structureRef = ref(db, 'structure')
-        const ramadanRef = ref(db, 'ramadan')
+        const eventRef = ref(db, 'ramadan') // Keeping the old DB key to not lose data
 
         const unsub1 = onValue(membersRef, (snapshot) => {
             const data = snapshot.val()
@@ -42,10 +44,13 @@ export const DataProvider = ({ children }) => {
             if (data && Array.isArray(data)) setStructure(data)
         }, (err) => console.warn('Firebase structure error:', err))
 
-        const unsub4 = onValue(ramadanRef, (snapshot) => {
+        const unsub4 = onValue(eventRef, (snapshot) => {
             const data = snapshot.val()
-            if (data) setRamadan(data)
-        }, (err) => console.warn('Firebase ramadan error:', err))
+            if (data) setEventData({
+                ...eventData,
+                ...data
+            })
+        }, (err) => console.warn('Firebase event error:', err))
 
         setLoading(false)
 
@@ -76,10 +81,10 @@ export const DataProvider = ({ children }) => {
         catch (e) { console.warn('Failed to save structure:', e) }
     }
 
-    const updateRamadan = async (newRamadan) => {
-        setRamadan(newRamadan)
-        try { await set(ref(db, 'ramadan'), newRamadan) }
-        catch (e) { console.warn('Failed to save ramadan settings:', e) }
+    const updateEventData = async (newEventData) => {
+        setEventData(newEventData)
+        try { await set(ref(db, 'ramadan'), newEventData) }
+        catch (e) { console.warn('Failed to save event settings:', e) }
     }
 
     const resetToDefault = async () => {
@@ -98,7 +103,7 @@ export const DataProvider = ({ children }) => {
             members, updateMembers,
             gallery, updateGallery,
             structure, updateStructure,
-            ramadan, updateRamadan,
+            eventData, updateEventData,
             resetToDefault,
             loading
         }}>

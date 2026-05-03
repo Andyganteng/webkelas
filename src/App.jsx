@@ -4,7 +4,8 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Structure from './components/Structure'
 import Members from './components/Members'
-import Gallery from './components/Gallery'
+import GalleryPreview from './components/GalleryPreview'
+import GalleryPage from './components/GalleryPage'
 import Guestbook from './components/Guestbook'
 import Footer from './components/Footer'
 import Loading from './components/Loading'
@@ -12,7 +13,6 @@ import AdminLogin from './components/admin/AdminLogin'
 import AdminDashboard from './components/admin/AdminDashboard'
 import { DataProvider } from './context/DataContext'
 import { AnimatePresence } from 'framer-motion'
-// import RamadanCountdown from './components/RamadanCountdown' // Removed for Hero integration
 
 function MainSite() {
     const [loading, setLoading] = useState(true)
@@ -27,8 +27,10 @@ function MainSite() {
     useEffect(() => {
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href.startsWith('/')) return;
                 e.preventDefault()
-                const target = document.querySelector(this.getAttribute('href'))
+                const target = document.querySelector(href)
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth' })
                 }
@@ -36,21 +38,17 @@ function MainSite() {
         })
     }, [])
 
-    // Determine what to show
-    // 1. If loading is true -> Show Loading
-    // 2. Else -> Show Main Site
-
     return (
         <AnimatePresence mode="wait">
             {loading ? (
                 <Loading key="loader" />
             ) : (
-                <main className="relative">
+                <main className="relative bg-white min-h-screen text-[#1d1d1f]">
                     <Navbar />
                     <Hero />
                     <Structure />
                     <Members />
-                    <Gallery />
+                    <GalleryPreview />
                     <Guestbook />
                     <Footer />
                 </main>
@@ -65,6 +63,7 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/" element={<MainSite />} />
+                    <Route path="/gallery" element={<GalleryPage />} />
                     <Route path="/admin" element={<AdminLogin />} />
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 </Routes>
