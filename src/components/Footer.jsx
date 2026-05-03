@@ -43,7 +43,7 @@ export default function Footer() {
           </div>
 
           <a
-            href="https://andymy.wuaze.com"
+            href="https://github.com/Andyganteng"
             target="_blank"
             rel="noreferrer"
             className="group flex items-center gap-2 text-xs bg-white px-4 py-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-all text-[#1d1d1f] shadow-sm"
