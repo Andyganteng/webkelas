@@ -12,7 +12,7 @@ const StructureCard = ({ member, role, isLarge = false, delay = 0 }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, delay: window.innerWidth < 768 ? 0 : delay }}
-      className="w-full z-10"
+      className="w-full max-w-[200px] md:max-w-[320px] mx-auto z-10"
     >
       <TiltedCard className="w-full">
         <div className="bg-white p-5 rounded-[2rem] border border-gray-100 shadow-md flex flex-col items-center text-center w-full">

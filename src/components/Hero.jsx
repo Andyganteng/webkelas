@@ -16,13 +16,33 @@ export default function Hero() {
   const { members, eventData } = useData();
   const { scrollY } = useScroll();
   const [quoteIndex, setQuoteIndex] = useState(0);
+  const [timeLeft, setTimeLeft] = useState({ Hari: 0, Jam: 0, Menit: 0, Detik: 0 });
 
   const memberCount = members?.length || 39;
 
+  function calculateTimeLeft() {
+    if (!eventData?.targetDate) return { Hari: 0, Jam: 0, Menit: 0, Detik: 0 };
+    const difference = +new Date(eventData.targetDate) - +new Date();
+    if (difference > 0) {
+      return {
+        Hari: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        Jam: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        Menit: Math.floor((difference / 1000 / 60) % 60),
+        Detik: Math.floor((difference / 1000) % 60)
+      };
+    }
+    return { Hari: 0, Jam: 0, Menit: 0, Detik: 0 };
+  }
+
   useEffect(() => {
-    const interval = setInterval(() => setQuoteIndex(prev => (prev + 1) % quotes.length), 5000);
-    return () => clearInterval(interval);
-  }, []);
+    if (eventData?.isActive) {
+      const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
+      return () => clearInterval(timer);
+    } else {
+      const interval = setInterval(() => setQuoteIndex(prev => (prev + 1) % quotes.length), 5000);
+      return () => clearInterval(interval);
+    }
+  }, [eventData]);
 
   const yText = useTransform(scrollY, [0, 500], [0, -100]);
   const opacityText = useTransform(scrollY, [0, 400], [1, 0]);
@@ -32,10 +52,6 @@ export default function Hero() {
     if (target) target.scrollIntoView({ behavior: 'smooth' });
   };
 
-  if (eventData?.isActive) {
-    return <EventCountdown onExplore={handleExplore} />;
-  }
-
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white text-[#1d1d1f] pt-20">
 
@@ -43,7 +59,7 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <LightRays
           raysOrigin="top-center"
-          raysColor="#d4d4d8" 
+          raysColor={eventData?.isActive ? "#0071e3" : "#d4d4d8"} 
           raysSpeed={window.innerWidth < 768 ? 1.0 : 1.8}
           lightSpread={0.6}
           rayLength={1.2}
@@ -66,14 +82,38 @@ export default function Hero() {
 
         {/* Main Headline */}
         <motion.div style={{ y: yText, opacity: opacityText }} className="text-center w-full max-w-5xl mx-auto pointer-events-auto mt-[-20px]">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className="text-lg md:text-2xl text-[#86868b] font-medium tracking-tight mb-20"
-          >
-            {quotes[quoteIndex]}
-          </motion.p>
+          {eventData?.isActive ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex flex-col items-center"
+            >
+               <span className="text-blue-500 font-bold text-xs md:text-sm uppercase tracking-[0.4em] mb-4 block">
+                Countdown Event
+              </span>
+              <h1 className="text-4xl md:text-7xl font-bold tracking-tighter mb-12">
+                {eventData.title}
+              </h1>
+              
+              <div className="grid grid-cols-4 gap-4 md:gap-12 mb-16">
+                {Object.entries(timeLeft).map(([unit, value]) => (
+                  <div key={unit} className="flex flex-col items-center">
+                    <Counter value={value} className="text-4xl md:text-7xl font-bold tracking-tighter" />
+                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#86868b] mt-2">{unit}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="text-lg md:text-2xl text-[#86868b] font-medium tracking-tight mb-20"
+            >
+              {quotes[quoteIndex]}
+            </motion.p>
+          )}
         </motion.div>
 
         {/* Stats Section with Reactbits Counter */}
