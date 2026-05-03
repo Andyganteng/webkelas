@@ -43,7 +43,7 @@ function MainSite() {
             {loading ? (
                 <Loading key="loader" />
             ) : (
-                <main className="relative bg-white min-h-screen text-[#1d1d1f]">
+                <main className="relative bg-white min-h-screen text-[#1d1d1f] pb-24 md:pb-0">
                     <Navbar />
                     <Hero />
                     <Structure />

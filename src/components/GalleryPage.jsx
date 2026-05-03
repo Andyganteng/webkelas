@@ -49,7 +49,7 @@ export default function GalleryPage() {
   const selectedImage = selectedIndex !== null ? filteredImages[selectedIndex] : null;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pb-24 md:pb-0">
       <Navbar />
 
       <main className="pt-32 pb-24 px-4 sm:px-6 container mx-auto max-w-[1600px]">

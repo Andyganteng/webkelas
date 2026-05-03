@@ -77,17 +77,17 @@ export default function Hero() {
         </motion.div>
 
         {/* Stats Section with Reactbits Counter */}
-        <div className="w-full max-w-4xl border-t border-gray-200 pt-16 pb-24 grid grid-cols-1 md:grid-cols-3 gap-12 text-center pointer-events-auto">
+        <div className="w-full max-w-4xl border-t border-gray-200 pt-12 pb-20 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center pointer-events-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="flex flex-col items-center"
           >
-            <p className="text-xs font-bold uppercase tracking-widest text-[#86868b] mb-2">Members</p>
+            <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#86868b] mb-2">Members</p>
             <div className="flex items-baseline gap-1">
-              <Counter value={memberCount} className="text-6xl md:text-7xl font-bold tracking-tighter text-[#1d1d1f]" />
-              <span className="text-3xl font-bold text-[#86868b]">+</span>
+              <Counter value={memberCount} className="text-5xl md:text-7xl font-bold tracking-tighter text-[#1d1d1f]" />
+              <span className="text-2xl md:text-3xl font-bold text-[#86868b]">+</span>
             </div>
           </motion.div>
 
@@ -98,9 +98,9 @@ export default function Hero() {
             transition={{ delay: 0.1 }}
             className="flex flex-col items-center"
           >
-            <p className="text-xs font-bold uppercase tracking-widest text-[#86868b] mb-2">YEAR</p>
+            <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#86868b] mb-2">YEAR</p>
             <div className="flex items-baseline gap-1">
-              <Counter value={2026} className="text-6xl md:text-7xl font-bold tracking-tighter text-[#1d1d1f]" />
+              <Counter value={2026} className="text-5xl md:text-7xl font-bold tracking-tighter text-[#1d1d1f]" />
             </div>
           </motion.div>
 
@@ -111,9 +111,10 @@ export default function Hero() {
             transition={{ delay: 0.2 }}
             className="flex flex-col items-center"
           >
-            <p className="text-xs font-bold uppercase tracking-widest text-[#86868b] mb-2">CLASS</p>
-            <div className="text-6xl md:text-7xl font-bold tracking-tighter text-[#1d1d1f]">
-              XI RPL 2            </div>
+            <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#86868b] mb-2">CLASS</p>
+            <div className="text-5xl md:text-7xl font-bold tracking-tighter text-[#1d1d1f]">
+              XI RPL 2
+            </div>
           </motion.div>
         </div>
 

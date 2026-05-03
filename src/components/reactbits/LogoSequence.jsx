@@ -74,8 +74,8 @@ const LogoSequence = ({ className = "" }) => {
   return (
     <canvas 
       ref={canvasRef}
-      className={className}
-      style={{ imageRendering: 'auto' }}
+      className={`${className} will-change-transform`}
+      style={{ imageRendering: 'auto', touchAction: 'none' }}
     />
   );
 };
