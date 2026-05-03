@@ -6,20 +6,20 @@ export default function Guestbook() {
   return (
     <section id="kontak" className="py-32 bg-white text-[#1d1d1f] relative overflow-hidden">
       
-      {/* Interactive PixelBlast Background */}
+      {/* Interactive PixelBlast Background - Optimized for mobile */}
       <div className="absolute inset-0 z-0">
         <PixelBlast
           variant="circle"
-          pixelSize={6}
-          color="#dbeafe" // Sangat soft light blue untuk tema putih
-          patternScale={3}
-          patternDensity={1.2}
+          pixelSize={window.innerWidth < 768 ? 10 : 6}
+          color="#dbeafe" 
+          patternScale={window.innerWidth < 768 ? 2 : 3}
+          patternDensity={window.innerWidth < 768 ? 0.8 : 1.2}
           pixelSizeJitter={0.5}
-          enableRipples
+          enableRipples={window.innerWidth >= 768}
           rippleSpeed={0.4}
           rippleThickness={0.12}
           rippleIntensityScale={1.5}
-          liquid
+          liquid={window.innerWidth >= 768}
           liquidStrength={0.12}
           liquidRadius={1.2}
           liquidWobbleSpeed={5}

@@ -39,19 +39,19 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white text-[#1d1d1f] pt-20">
 
-      {/* LightRays Interactive Background */}
+      {/* LightRays Interactive Background - Simplified for mobile */}
       <div className="absolute inset-0 z-0">
         <LightRays
           raysOrigin="top-center"
-          raysColor="#d4d4d8"
-          raysSpeed={1.8}
+          raysColor="#d4d4d8" 
+          raysSpeed={window.innerWidth < 768 ? 1.0 : 1.8}
           lightSpread={0.6}
           rayLength={1.2}
-          followMouse={true}
-          mouseInfluence={0.2}
-          noiseAmount={0.05}
+          followMouse={window.innerWidth >= 768}
+          mouseInfluence={window.innerWidth < 768 ? 0 : 0.2}
+          noiseAmount={window.innerWidth < 768 ? 0.02 : 0.05}
           distortion={0.05}
-          pulsating
+          pulsating={window.innerWidth >= 768}
           fadeDistance={0.6}
           saturation={1.3}
         />
@@ -60,8 +60,8 @@ export default function Hero() {
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center w-full h-full justify-center min-h-[80vh] pointer-events-none">
 
         {/* Animated Logo Sequence from folder with Dynamic BG Removal */}
-        <div className="flex flex-col items-center justify-center mb-0 select-none pointer-events-auto -mt-40">
-          <LogoSequence className="h-300 md:h-100 object-contain" />
+        <div className="flex flex-col items-center justify-center mb-0 select-none pointer-events-auto -mt-16 md:-mt-24">
+          <LogoSequence className="h-40 md:h-64 object-contain" />
         </div>
 
         {/* Main Headline */}
