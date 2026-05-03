@@ -11,13 +11,12 @@ const LogoSequence = ({ className = "" }) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if mobile
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
-    // Preload images - partially for mobile to save memory
-    const limit = window.innerWidth < 768 ? 50 : logoFrames.length;
+    // Limit frames on mobile to save memory
+    const limit = window.innerWidth < 768 ? 80 : logoFrames.length;
     logoFrames.slice(0, limit).forEach((frame, index) => {
       const img = new Image();
       img.src = `/logoanimasi/${frame}`;
@@ -26,9 +25,9 @@ const LogoSequence = ({ className = "" }) => {
       };
     });
 
-    const fps = window.innerWidth < 768 ? 15 : 30; // Reduce FPS on mobile
+    const fps = window.innerWidth < 768 ? 20 : 30;
     const interval = setInterval(() => {
-      setFrameIndex((prev) => (prev + 1) % logoFrames.length);
+      setFrameIndex((prev) => (prev + 1) % limit);
     }, 1000 / fps);
 
     return () => {
@@ -40,42 +39,27 @@ const LogoSequence = ({ className = "" }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: true });
+    const ctx = canvas.getContext('2d', { alpha: false }); // Disable alpha for speed
     const img = imagesRef.current[frameIndex];
 
     if (img && img.complete) {
-      // Use lower resolution for processing on mobile to save CPU
-      const scale = isMobile ? 0.5 : 1;
-      const width = img.width * scale;
-      const height = img.height * scale;
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
       
-      canvas.width = width;
-      canvas.height = height;
-      
-      ctx.clearRect(0, 0, width, height);
-      ctx.drawImage(img, 0, 0, width, height);
-
-      // Optimized background removal
-      const imageData = ctx.getImageData(0, 0, width, height);
-      const data = imageData.data;
-      
-      // On mobile, skip pixels to speed up processing if needed, 
-      // but simple R>240 is usually fast enough for small logos.
-      for (let i = 0; i < data.length; i += 4) {
-        // Simple and fast threshold
-        if (data[i] > 235 && data[i+1] > 235 && data[i+2] > 235) {
-          data[i + 3] = 0;
-        }
-      }
-      ctx.putImageData(imageData, 0, 0);
+      // Background removal is now handled by CSS mix-blend-mode for ZERO CPU cost
     }
-  }, [frameIndex, isMobile]);
+  }, [frameIndex]);
 
   return (
     <canvas 
       ref={canvasRef}
       className={`${className} will-change-transform`}
-      style={{ imageRendering: 'auto', touchAction: 'none' }}
+      style={{ 
+        imageRendering: 'auto', 
+        touchAction: 'none',
+        mixBlendMode: 'multiply' // Super fast background removal
+      }}
     />
   );
 };

@@ -12,7 +12,7 @@ const StructureCard = ({ member, role, isLarge = false, delay = 0 }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, delay: window.innerWidth < 768 ? 0 : delay }}
-      className="w-full max-w-[260px] md:max-w-[320px] mx-auto z-10 scale-90 md:scale-100"
+      className="w-full z-10"
     >
       <TiltedCard className="w-full">
         <div className="bg-white p-5 rounded-[2rem] border border-gray-100 shadow-md flex flex-col items-center text-center w-full">
@@ -27,7 +27,7 @@ const StructureCard = ({ member, role, isLarge = false, delay = 0 }) => {
             )}
           </div>
 
-          <h3 className={`${isLarge ? 'text-2xl' : 'text-xl'} font-bold text-[#1d1d1f] mb-2 leading-tight`}>{member.name}</h3>
+          <h3 className={`${isLarge ? 'text-lg md:text-2xl' : 'text-sm md:text-xl'} font-bold text-[#1d1d1f] mb-2 leading-tight`}>{member.name}</h3>
           <p className="text-blue-500 font-bold text-xs uppercase tracking-widest mb-5 bg-blue-50 px-4 py-1.5 rounded-full">{role}</p>
 
           {member.instagram && (
