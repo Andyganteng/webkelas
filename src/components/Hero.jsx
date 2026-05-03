@@ -86,9 +86,8 @@ export default function Hero() {
 
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center w-full h-full justify-center min-h-[80vh] pointer-events-none">
 
-        {/* Animated Logo Sequence from folder with Dynamic BG Removal */}
-        <div className={`flex flex-col items-center justify-center mb-0 select-none pointer-events-auto -mt-16 md:-mt-24 ${eventData?.isActive ? 'invert brightness-200' : ''}`}>
-          <LogoSequence className={`${eventData?.isActive ? 'h-[300px] md:h-[200px]' : 'h-[250px] md:h-[250px]'} object-contain`} />
+        <div className={`flex flex-col items-center justify-center mb-0 select-none pointer-events-auto -mt-32 md:-mt-64 ${eventData?.isActive ? 'invert brightness-200' : ''}`}>
+          <LogoSequence className="h-[700px] object-contain" />
         </div>
 
         {/* Main Headline */}
