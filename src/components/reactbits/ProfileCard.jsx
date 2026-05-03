@@ -14,7 +14,7 @@ export default function ProfileCard({ member }) {
     >
       <div className="absolute inset-0 bg-[#F5F5F7] z-0">
         {member.image ? (
-            <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+            <img src={member.image} alt={member.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
         ) : (
             <div className="w-full h-full flex flex-col items-center justify-center text-[#d1d1d6]">
                 <span className="text-6xl font-bold">{member.name.charAt(0)}</span>

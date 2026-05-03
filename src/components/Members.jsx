@@ -9,7 +9,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08, // Stagger effect for "1 persatu"
+      staggerChildren: typeof window !== 'undefined' && window.innerWidth < 768 ? 0 : 0.08,
     }
   }
 };

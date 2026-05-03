@@ -6,27 +6,31 @@ export default function Guestbook() {
   return (
     <section id="kontak" className="py-32 bg-white text-[#1d1d1f] relative overflow-hidden">
       
-      {/* Interactive PixelBlast Background - Optimized for mobile */}
+      {/* Interactive PixelBlast Background - Disabled on mobile for performance */}
       <div className="absolute inset-0 z-0">
-        <PixelBlast
-          variant="circle"
-          pixelSize={window.innerWidth < 768 ? 10 : 6}
-          color="#dbeafe" 
-          patternScale={window.innerWidth < 768 ? 2 : 3}
-          patternDensity={window.innerWidth < 768 ? 0.8 : 1.2}
-          pixelSizeJitter={0.5}
-          enableRipples={window.innerWidth >= 768}
-          rippleSpeed={0.4}
-          rippleThickness={0.12}
-          rippleIntensityScale={1.5}
-          liquid={window.innerWidth >= 768}
-          liquidStrength={0.12}
-          liquidRadius={1.2}
-          liquidWobbleSpeed={5}
-          speed={0.6}
-          edgeFade={0.25}
-          transparent
-        />
+        {window.innerWidth >= 768 ? (
+          <PixelBlast
+            variant="circle"
+            pixelSize={6}
+            color="#dbeafe" 
+            patternScale={3}
+            patternDensity={1.2}
+            pixelSizeJitter={0.5}
+            enableRipples
+            rippleSpeed={0.4}
+            rippleThickness={0.12}
+            rippleIntensityScale={1.5}
+            liquid
+            liquidStrength={0.12}
+            liquidRadius={1.2}
+            liquidWobbleSpeed={5}
+            speed={0.6}
+            edgeFade={0.25}
+            transparent
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-b from-blue-50/50 to-white opacity-50" />
+        )}
       </div>
 
       <div className="container mx-auto max-w-4xl px-6 relative z-10 text-center pointer-events-none">

@@ -11,7 +11,7 @@ const StructureCard = ({ member, role, isLarge = false, delay = 0 }) => {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, delay }}
+      transition={{ duration: 0.8, delay: window.innerWidth < 768 ? 0 : delay }}
       className="w-full max-w-[320px] mx-auto z-10"
     >
       <TiltedCard className="w-full">
@@ -19,7 +19,7 @@ const StructureCard = ({ member, role, isLarge = false, delay = 0 }) => {
           {/* Full Image instead of circle */}
           <div className="w-full aspect-square rounded-2xl overflow-hidden mb-5 bg-[#F5F5F7]">
             {member.image ? (
-              <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+              <img src={member.image} alt={member.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-[#d1d1d6] uppercase">
                 {member.name.charAt(0)}
