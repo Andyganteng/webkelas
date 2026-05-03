@@ -86,8 +86,8 @@ export default function Hero() {
 
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center w-full h-full justify-center min-h-[80vh] pointer-events-none">
 
-        <div className={`flex flex-col items-center justify-center mb-0 select-none pointer-events-auto ${eventData?.isActive ? 'invert brightness-200' : ''}`}>
-          <LogoSequence className="w-[70vw] h-auto max-w-[200px] md:max-w-[400px] object-contain" />
+        <div className={`flex flex-col items-center justify-center mb-0 select-none pointer-events-auto md:-mt-64 ${eventData?.isActive ? 'invert brightness-200' : ''}`}>
+          <LogoSequence className="w-[70vw] h-auto max-w-[200px] md:max-w-none md:h-[700px] object-contain" />
         </div>
 
         {/* Main Headline */}
