@@ -55,40 +55,51 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white text-[#1d1d1f] pt-20">
 
-      {/* LightRays Interactive Background - Simplified for mobile */}
+      {/* Background Layer */}
       <div className="absolute inset-0 z-0">
-        <LightRays
-          raysOrigin="top-center"
-          raysColor={eventData?.isActive ? "#0071e3" : "#d4d4d8"} 
-          raysSpeed={window.innerWidth < 768 ? 1.0 : 1.8}
-          lightSpread={0.6}
-          rayLength={1.2}
-          followMouse={window.innerWidth >= 768}
-          mouseInfluence={window.innerWidth < 768 ? 0 : 0.2}
-          noiseAmount={window.innerWidth < 768 ? 0.02 : 0.05}
-          distortion={0.05}
-          pulsating={window.innerWidth >= 768}
-          fadeDistance={0.6}
-          saturation={1.3}
-        />
+        {eventData?.isActive && eventData?.backgroundImage ? (
+          <>
+            <div className="absolute inset-0 bg-black/60 z-10" />
+            <img 
+              src={eventData.backgroundImage} 
+              alt="Event Background" 
+              className="w-full h-full object-cover"
+            />
+          </>
+        ) : (
+          <LightRays
+            raysOrigin="top-center"
+            raysColor="#d4d4d8" 
+            raysSpeed={window.innerWidth < 768 ? 1.0 : 1.8}
+            lightSpread={0.6}
+            rayLength={1.2}
+            followMouse={window.innerWidth >= 768}
+            mouseInfluence={window.innerWidth < 768 ? 0 : 0.2}
+            noiseAmount={window.innerWidth < 768 ? 0.02 : 0.05}
+            distortion={0.05}
+            pulsating={window.innerWidth >= 768}
+            fadeDistance={0.6}
+            saturation={1.3}
+          />
+        )}
       </div>
 
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center w-full h-full justify-center min-h-[80vh] pointer-events-none">
 
         {/* Animated Logo Sequence from folder with Dynamic BG Removal */}
-        <div className="flex flex-col items-center justify-center mb-0 select-none pointer-events-auto -mt-16 md:-mt-24">
-          <LogoSequence className="h-40 md:h-64 object-contain" />
+        <div className={`flex flex-col items-center justify-center mb-0 select-none pointer-events-auto -mt-16 md:-mt-24 ${eventData?.isActive ? 'invert brightness-200' : ''}`}>
+          <LogoSequence className="h-[300px] md:h-[200px] object-contain" />
         </div>
 
         {/* Main Headline */}
-        <motion.div style={{ y: yText, opacity: opacityText }} className="text-center w-full max-w-5xl mx-auto pointer-events-auto mt-[-20px]">
+        <motion.div style={{ y: yText, opacity: opacityText }} className={`text-center w-full max-w-5xl mx-auto pointer-events-auto mt-[-20px] ${eventData?.isActive ? 'text-white' : ''}`}>
           {eventData?.isActive ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col items-center"
             >
-               <span className="text-blue-500 font-bold text-xs md:text-sm uppercase tracking-[0.4em] mb-4 block">
+               <span className="text-blue-400 font-bold text-xs md:text-sm uppercase tracking-[0.4em] mb-4 block">
                 Countdown Event
               </span>
               <h1 className="text-4xl md:text-7xl font-bold tracking-tighter mb-12">
@@ -98,8 +109,8 @@ export default function Hero() {
               <div className="grid grid-cols-4 gap-4 md:gap-12 mb-16">
                 {Object.entries(timeLeft).map(([unit, value]) => (
                   <div key={unit} className="flex flex-col items-center">
-                    <Counter value={value} className="text-4xl md:text-7xl font-bold tracking-tighter" />
-                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#86868b] mt-2">{unit}</span>
+                    <Counter value={value} className="text-4xl md:text-7xl font-bold tracking-tighter text-white" />
+                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mt-2">{unit}</span>
                   </div>
                 ))}
               </div>
