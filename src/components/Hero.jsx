@@ -88,7 +88,7 @@ export default function Hero() {
 
         {/* Animated Logo Sequence from folder with Dynamic BG Removal */}
         <div className={`flex flex-col items-center justify-center mb-0 select-none pointer-events-auto -mt-16 md:-mt-24 ${eventData?.isActive ? 'invert brightness-200' : ''}`}>
-          <LogoSequence className="h-[300px] md:h-[200px] object-contain" />
+          <LogoSequence className={`${eventData?.isActive ? 'h-[300px] md:h-[200px]' : 'h-[250px] md:h-[250px]'} object-contain`} />
         </div>
 
         {/* Main Headline */}
