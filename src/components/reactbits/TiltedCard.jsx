@@ -1,26 +1,32 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useSpring } from 'framer-motion';
 
 export default function TiltedCard({ children, className = '' }) {
   const ref = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
   
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const x = useSpring(0, { stiffness: 400, damping: 40, mass: 0.5 });
   const y = useSpring(0, { stiffness: 400, damping: 40, mass: 0.5 });
 
   const handleMove = (e) => {
-    if (!ref.current) return;
+    if (isMobile || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
     
-    // Support for both mouse and touch events
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
     const mouseX = clientX - rect.left;
     const mouseY = clientY - rect.top;
     
-    // Limit rotation to a small degree to prevent heavy/glitchy look
     const rX = (mouseY / height - 0.5) * -15;
     const rY = (mouseX / width - 0.5) * 15;
     
@@ -41,15 +47,15 @@ export default function TiltedCard({ children, className = '' }) {
       onTouchMove={handleMove}
       onTouchEnd={handleLeave}
       style={{
-        rotateX: y,
-        rotateY: x,
+        rotateX: isMobile ? 0 : y,
+        rotateY: isMobile ? 0 : x,
         transformStyle: 'preserve-3d',
       }}
       className={`relative perspective-[1200px] ${className}`}
     >
       <motion.div
         style={{
-          transform: 'translateZ(20px)',
+          transform: isMobile ? 'none' : 'translateZ(20px)',
           transformStyle: 'preserve-3d',
         }}
         className="w-full h-full"

@@ -15,15 +15,13 @@ const containerVariants = {
 };
 
 const glitchVariants = {
-  hidden: {
-    opacity: 0
-  },
+  hidden: { opacity: 0, y: 10 },
   visible: {
-    opacity: [0, 1, 0, 1, 0.3, 1],
+    opacity: 1,
+    y: 0,
     transition: {
-      duration: 0.4,
-      ease: "linear",
-      times: [0, 0.2, 0.4, 0.6, 0.8, 1]
+      duration: window.innerWidth < 768 ? 0.3 : 0.4,
+      ease: "easeOut"
     }
   }
 };
