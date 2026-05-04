@@ -86,12 +86,12 @@ export default function Hero() {
 
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center w-full h-full justify-center min-h-[80vh] pointer-events-none">
 
-        <div className={`flex flex-col items-center justify-center mb-0 select-none pointer-events-auto md:-mt-64 ${eventData?.isActive ? 'invert brightness-200' : ''}`}>
-         <LogoSequence className="mt-[350px] w-[70vw] h-[auto] max-w-[200px] md:max-w-none md:h-[700px] object-contain" />
+        <div className={`flex flex-col items-center justify-center mb-6 md:mb-8 select-none pointer-events-auto md:-mt-10 lg:-mt-20 ${eventData?.isActive ? 'invert brightness-200' : ''}`}>
+          <LogoSequence className="w-[60vw] h-auto max-w-[220px] md:max-w-none md:h-[400px] lg:h-[550px] object-contain" />
         </div>
 
         {/* Main Headline */}
-        <motion.div style={{ y: yText, opacity: opacityText }} className={`text-center w-full max-w-5xl mx-auto pointer-events-auto mt-[-10px] ${eventData?.isActive ? 'text-white' : ''}`}>
+        <motion.div style={{ y: yText, opacity: opacityText }} className={`text-center w-full max-w-5xl mx-auto pointer-events-auto ${eventData?.isActive ? 'text-white' : ''}`}>
           {eventData?.isActive ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
